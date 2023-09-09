@@ -1,5 +1,5 @@
 
-# Nextjs authflow
+# Nextjs 13 authflow
 - will use this as template for my future projects
 
 # TODO
