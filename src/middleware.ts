@@ -1,23 +1,33 @@
+import { withAuth, NextRequestWithAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { StatusCodes } from "http-status-codes";
 
-export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  const publicPaths = ["/login", "/signup", "/verifymail"];
-  const isPublicPath = publicPaths.includes(path);
+export default withAuth(
+  function middleware(request: NextRequestWithAuth) {
+    console.log("Middleware Pathname:", request.nextUrl.pathname);
+    console.log("Middleware Token:", request.nextauth.token);
 
-  const token = request.cookies.get("token")?.value || "";
+    if (
+      request.nextUrl.pathname.startsWith("/admin") &&
+      request.nextauth.token?.role !== "admin"
+    ) {
+      return NextResponse.rewrite(new URL("/denied", request.url));
+    }
 
-  if (isPublicPath && token) {
-    return NextResponse.redirect(new URL("/", request.url));
+    if (
+      request.nextUrl.pathname.startsWith("/moderation") &&
+      request.nextauth.token?.role !== "admin" &&
+      request.nextauth.token?.role !== "moderator"
+    ) {
+      return NextResponse.rewrite(new URL("/denied", request.url));
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
   }
-
-  if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-}
+);
 
 export const config = {
-  matcher: ["/profile", "/login", "/signup", "/verifymail"],
+  matcher: ["/admin", "/moderation"],
 };

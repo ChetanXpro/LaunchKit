@@ -6,6 +6,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
+import { signIn } from "next-auth/react";
 
 const page = () => {
   const [isLoading, setisLoading] = React.useState(false);
@@ -32,15 +33,20 @@ const page = () => {
         password: watch("Password"),
       };
 
-      const res = await axios.post("/api/user/login", data);
+      const res = await signIn("credentials", {
+        redirect: false,
+        ...data,
+      });
 
-      console.log(res.data);
-
-      if (res.data.success) {
-        toast.success(res.data.message);
-        router.push("/profile");
+      // const res = await axios.post("/api/user/login", data);
+      console.log("ee", res);
+      if (res?.error) {
+        toast.error(res.error);
       } else {
-        console.log(res.data.message);
+        // toast.success("Login Success");
+        console.log("Push");
+
+        router.replace("/profile");
       }
     } catch (error: any) {
       console.log(error);
