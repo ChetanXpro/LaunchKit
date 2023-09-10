@@ -44,8 +44,8 @@ const page = () => {
         console.log(res.data.message);
       }
     } catch (error: any) {
-      console.log(error);
-      toast.error(error.message);
+      console.log(error.response.data.error);
+      toast.error(error.response.data.error || error.message);
     } finally {
       setisLoading(false);
     }

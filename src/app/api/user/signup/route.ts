@@ -3,6 +3,8 @@ import Users from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
+import { sendMail } from "@/helpers/mailer";
+import { EMAIL_TYPE } from "@/constants/email";
 
 connectDB();
 
@@ -41,6 +43,7 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
     });
 
+    await sendMail(email, createdUser._id, EMAIL_TYPE.VERIFY);
     return NextResponse.json(
       {
         message: "Account created successfully",

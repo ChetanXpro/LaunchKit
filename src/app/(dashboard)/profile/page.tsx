@@ -4,7 +4,8 @@ import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Profile = () => {
+  // throw new Error("Client-side error");
   const router = useRouter();
   const [user, setUser] = React.useState<any>(null);
   const logout = async () => {
@@ -33,7 +34,7 @@ const page = () => {
       }
     } catch (error: any) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response.data.error);
     }
   };
 
@@ -53,4 +54,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Profile;
