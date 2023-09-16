@@ -2,6 +2,7 @@ import connectDB from "@/configs/dbConfig/dbConfig";
 import clientPromise from "@/configs/mongodbClient";
 import Users from "@/models/user";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import type { Adapter } from "next-auth/adapters";
 import type { NextAuthOptions } from "next-auth";
 import Credentials, {
   CredentialsProvider,
@@ -11,7 +12,7 @@ import bcrypt from "bcryptjs";
 import { isDotDotDotToken } from "typescript";
 
 export const options: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(clientPromise) as Adapter,
   providers: [
     Credentials({
       name: "Credentials",
