@@ -3,10 +3,14 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, "Please enter your username"],
     min: 3,
     max: 25,
     trim: true,
+  },
+  provider: {
+    type: String,
+    default: "credentials",
+    enum: ["credentials", "google"],
   },
   email: {
     type: String,
@@ -16,7 +20,6 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Please enter your password"],
   },
 
   role: {
@@ -28,6 +31,17 @@ const userSchema = new mongoose.Schema({
   isVarified: {
     type: Boolean,
     default: false,
+  },
+  stripeCustomerId: {
+    type: String,
+    unique: true,
+  },
+  isActiveSubscription: {
+    type: Boolean,
+    default: false,
+  },
+  subscriptionId: {
+    type: String,
   },
   varificationToken: String,
   varificationTokenExpire: Date,

@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
     const createdUser = await Users.create({
       username,
       email,
+      provider: "credentials",
       password: hashedPassword,
     });
 

@@ -7,9 +7,14 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
 import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Input, InputProps } from "@/components/ui/input";
+import Image from "next/image";
+import googleIcon from "../../../../public/icons/google.png";
 
 const page = () => {
   const [isLoading, setisLoading] = React.useState(false);
+  const [isGoogleLoading, setisGoogleLoading] = React.useState(false);
 
   const router = useRouter();
   const {
@@ -34,7 +39,8 @@ const page = () => {
       };
 
       const res = await signIn("credentials", {
-        redirect: false,
+        redirect: true,
+        callbackUrl: "http://localhost:3000/profile",
         ...data,
       });
 
@@ -44,15 +50,34 @@ const page = () => {
         toast.error(res.error);
       } else {
         // toast.success("Login Success");
-        console.log("Push");
-
-        router.replace("/profile");
       }
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.error);
     } finally {
       setisLoading(false);
+    }
+  };
+
+  const onGoogleLogin = async () => {
+    try {
+      setisGoogleLoading(true);
+      const res = await signIn("google", {
+        redirect: true,
+        callbackUrl: "http://localhost:3000/profile",
+      });
+
+      if (res?.error) {
+        toast.error(res.error);
+      } else {
+        toast.success("Login Success");
+        router.replace("/profile");
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.error);
+    } finally {
+      setisGoogleLoading(false);
     }
   };
 
@@ -65,32 +90,35 @@ const page = () => {
   }, [watch("username"), watch("Email"), watch("Password")]);
 
   return (
-    <div className="flex min-h-screen  flex-col gap-4  items-center justify-center  ">
-      <div className="flex flex-col gap-2">
+    <div className="flex min-h-screen   flex-col gap-4  items-center justify-center  ">
+      <div className="flex flex-col  p-10  gap-2">
         <label className="label">Email</label>
-        <input
+        <Input
           {...register("Email", { required: true })}
           className="input input-bordered w-full max-w-xs"
           placeholder="Email"
         />
         {errors.Email && <p className="error">Email is required.</p>}
         <label className="label">Password</label>
-        <input
+        <Input
+          type="password"
           {...register("Password", { required: true })}
           placeholder="Password"
           className="input input-bordered w-full max-w-xs"
         />
         {errors.Password && <p className="error">Password is required.</p>}
 
-        <button
-          className={`btn mt-3 flex gap-3  ${
-            buttonEnabled ? "btn" : "btn btn-disabled"
-          } `}
-          onClick={onLogin}
-        >
+        <Button className={`  mt-3 flex gap-3 `} onClick={onLogin}>
           {isLoading && <span className="loading loading-spinner"></span>}
           Login
-        </button>
+        </Button>
+        <p className="w-full text-center">Or</p>
+        <div className="w-full items-center justify-center ">
+          <Button onClick={onGoogleLogin} className="w-full flex gap-3">
+            <Image width={25} height={25} src={googleIcon} alt="googleicon" />
+            Login with google
+          </Button>
+        </div>
 
         <div className="mt-4 items-center justify-between flex w-full">
           <p>
