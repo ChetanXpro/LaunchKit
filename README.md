@@ -5,6 +5,7 @@ This Next.js template to Ship fast and is designed to eliminate the tedious and 
 ## Features
 
 - **Streamlined Setup:** We've taken care of the mundane setup steps, so you can focus on what matters most—building your application.
+- **Authentication Options:** Supports both email/password and Google authentication out of the box, giving users the flexibility to choose their preferred login method.
 
 - **Database Connections:** Easily connect to database
 - **Logins:** Both email password and goggle auth already setup
