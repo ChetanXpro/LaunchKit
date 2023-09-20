@@ -6,7 +6,8 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+
 import { Button } from "@/components/ui/button";
 import { Input, InputProps } from "@/components/ui/input";
 import Image from "next/image";
@@ -15,8 +16,14 @@ import googleIcon from "../../../../public/icons/google.png";
 const page = () => {
   const [isLoading, setisLoading] = React.useState(false);
   const [isGoogleLoading, setisGoogleLoading] = React.useState(false);
-
   const router = useRouter();
+
+  const { data } = useSession();
+
+  if (data?.user) {
+    router.replace("/profile");
+  }
+
   const {
     register,
     handleSubmit,

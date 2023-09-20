@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
 import { sendMail } from "@/helpers/mailer";
 import { EMAIL_TYPE } from "@/constants/email";
+import { createStripeCustomer } from "@/configs/stripe";
 
 connectDB();
 
@@ -37,10 +38,13 @@ export async function POST(request: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    const customer = await createStripeCustomer(email);
+
     const createdUser = await Users.create({
       username,
       email,
       provider: "credentials",
+      stripeCustomerId: customer.id,
       password: hashedPassword,
     });
 

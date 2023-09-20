@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     max: 25,
     trim: true,
   },
+
   provider: {
     type: String,
     default: "credentials",

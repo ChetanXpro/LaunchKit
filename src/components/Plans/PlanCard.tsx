@@ -1,7 +1,16 @@
 "use client";
+import getStripe from "@/configs/stripe";
 import { FormEvent, useEffect, useState } from "react";
 
-const PlanCard = ({ plan }: { plan: TPrice }) => {
+const PlanCard = ({
+  plan,
+}: {
+  plan: {
+    id: string;
+    planType: string;
+    price: string;
+  };
+}) => {
   const buyPlan = async (e: FormEvent) => {
     e.preventDefault();
     const res = await fetch("/api/checkout", {
@@ -11,20 +20,22 @@ const PlanCard = ({ plan }: { plan: TPrice }) => {
       },
       body: JSON.stringify({ planId: plan.id }),
     });
-    const stripeUrl = await res.json();
-    console.log(stripeUrl);
+    const responseJson = await res.json();
 
-    window.location.assign(stripeUrl.url);
+    if (responseJson.session) {
+      const stripe = await getStripe();
+      stripe!.redirectToCheckout({
+        sessionId: responseJson.session.id,
+      });
+    }
   };
 
   return (
     <div className="flex flex-col p-6 mx-auto  text-center rounded-lg border shadow border-gray-600 bg-gray-800 text-white">
-      <h3 className="mb-4 text-2xl font-semibold">{plan.nickname}</h3>
+      <h3 className="mb-4 text-2xl font-semibold">{plan.planType}</h3>
       <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400"></p>
       <div className="flex justify-center items-baseline my-8">
-        <span className="mr-2 text-5xl font-extrabold">
-          $ {plan.unit_amount / 100}
-        </span>
+        <span className="mr-2 text-5xl font-extrabold">$ {plan.price}</span>
         <span className="text-gray-500 dark:text-gray-400">/ One Time</span>
       </div>
       {/* <!-- List --> */}

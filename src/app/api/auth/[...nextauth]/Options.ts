@@ -13,6 +13,7 @@ import bcrypt from "bcryptjs";
 import { isDotDotDotToken } from "typescript";
 import { EMAIL_TYPE } from "@/constants/email";
 import { sendMail } from "@/helpers/mailer";
+import { createStripeCustomer } from "@/configs/stripe";
 
 export const options: NextAuthOptions = {
   // adapter: MongoDBAdapter(clientPromise) as Adapter,
@@ -20,13 +21,6 @@ export const options: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
     }),
     Credentials({
       name: "Credentials",
@@ -62,51 +56,72 @@ export const options: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, user }: any) {
-      console.log("token", token);
-      console.log("user", user);
+      // console.log("token", token);
+      // console.log("user", user);
 
       if (user) {
         token.role = user.role;
+        token.stripeCustomerId = user.stripeCustomerId;
+        token.isActiveSubscription = user.isActiveSubscription;
+        token.subscriptionId = user.subscriptionId;
       }
       return token;
     },
+
     async signIn({ account, profile }: any) {
       if (account!.provider === "google") {
         try {
           await connectDB();
           const email = profile!.email;
           const email_verified = profile!.email_verified;
-          console.log("account", account);
-          console.log("profile", profile);
+
           const userFound = await Users.findOne({ email });
 
           if (!userFound) {
+            const customer = await createStripeCustomer(email);
+
             const usercreated = await Users.create({
               email: email,
               provider: "google",
+              stripeCustomerId: customer.id,
               role: "user",
-              isVarified: email_verified,
+              isActiveSubscription: false,
+              isVarified: false,
             });
             if (!usercreated) {
               return false;
             }
 
-            await sendMail(email, usercreated._id, EMAIL_TYPE.VERIFY);
+            // console.log("usercreated", usercreated);
+            // console.log("stripeCustomer", customer);
+
+            // await sendMail(email, usercreated._id, EMAIL_TYPE.VERIFY);
+
+            return account;
+          } else {
+            // account.user!.stripeCustomerId = userFound.stripeCustomerId;
+            // account.user!.isActiveSubscription = userFound.isActiveSubscription;
+            // account.user!.subscriptionId = userFound.subscriptionId;
+            return account;
           }
+
+          return userFound;
         } catch (error) {
-          console.log(error);
+          // console.log(error);
 
           return false;
         }
       }
 
-      return true; // Do different verification for other providers that don't have `email_verified`
+      return account;
     },
 
     async session({ session, token }) {
       if (session?.user) {
         session.user.role = token.role as string;
       }
+      // console.log("session", session);
+
       return session;
     },
   },
@@ -120,20 +135,3 @@ export const options: NextAuthOptions = {
     verifyRequest: "/verifymail",
   },
 };
-
-// export const options: NextAuthOptions = {
-//   adapter: MongoDBAdapter(clientPromise),
-//   providers: [
-//     EmailProvider({
-//       server: {
-//         host: process.env.SMPT_HOST,
-//         port: process.env.SMPT_PORT,
-//         auth: {
-//           user: process.env.SMPT_USER,
-//           pass: process.env.SMPT_PASSWORD,
-//         },
-//       },
-//       from: process.env.SMPT_USER,
-//     }),
-//   ],
-// };

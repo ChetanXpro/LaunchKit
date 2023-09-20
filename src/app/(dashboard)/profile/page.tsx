@@ -18,7 +18,7 @@ const Profile = () => {
     },
   });
 
-  console.log("status: ", status);
+  // console.log("status: ", status);
 
   const router = useRouter();
   const [user, setUser] = React.useState<any>(null);
@@ -29,7 +29,7 @@ const Profile = () => {
         callbackUrl: "/login",
         redirect: true,
       });
-      console.log("Logout: ", res);
+      // console.log("Logout: ", res);
     } catch (error: any) {
       console.log(error);
     }

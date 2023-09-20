@@ -2,24 +2,26 @@
 
 import React, { useEffect, useState } from "react";
 import PlanCard from "./PlanCard";
+import { stripePlans } from "@/configs/stripe";
 
 const Plans = () => {
-  const [plans, setPlans] = useState<TPrice[]>([]);
+  // const [plans, setPlans] = useState<TPrice[]>([]);
 
-  const getPlans = async () => {
-    const res = await fetch("/api/getPlans");
-    const data = await res.json();
-    console.log(data.data);
+  // const getPlans = async () => {
+  //   const res = await fetch("/api/getPlans");
+  //   const data = await res.json();
+  //   console.log(data.data);
 
-    setPlans(data.data);
-  };
+  //   setPlans(data.data);
+  // };
 
-  useEffect(() => {
-    getPlans();
-  }, []);
+  // useEffect(() => {
+  //   getPlans();
+  // }, []);
+
   return (
     <div className="flex gap-3">
-      {plans.map((plan: TPrice) => (
+      {stripePlans.map((plan) => (
         <PlanCard key={plan.id} plan={plan} />
       ))}
     </div>
