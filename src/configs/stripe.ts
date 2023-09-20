@@ -27,23 +27,42 @@ export const createStripeCustomer = async (email: string) => {
 };
 
 // Stripe Plans
-export const stripePlans = [
+
+export const storeSubscriptionPlans: SubscriptionPlan[] = [
   {
-    id: "price_1Ns8xMSFtLfNSPgol8PQUKFZ",
-    planType: "Basic plan",
-    price: "15$",
-    planPoint: ["No extra fees", "No hidden charges", "No extra charges"],
+    id: "mobile",
+    name: "Mobile",
+    descriptionPoints: [
+      "Good video quality in SD (480p).",
+      "Watch ad-free on any phone or tablet.",
+      "Computer and TV not included.",
+      "Download on 1 device.",
+    ],
+    stripePriceId: "price_1NsL5CSFtLfNSPgofs8MXYt3",
+    price: 15,
   },
   {
-    id: "price_1NrktySFtLfNSPgoGyfAJgja",
-    planType: "Standard Plan",
-    price: "35$",
-    planPoint: ["No extra fees", "No hidden charges", "No extra charges"],
+    id: "basic",
+    name: "Basic",
+    descriptionPoints: [
+      "Good video quality in HD (720).",
+      "Watch ad-free on any phone, tablet, computer or TV.",
+      "Download on 1 device.",
+    ],
+
+    stripePriceId: "price_1NsL6LSFtLfNSPgob8bEV80w",
+    price: 25,
   },
   {
-    id: "price_1NrkvDSFtLfNSPgoBEeRRRGo",
-    planType: "Expensive Plan",
-    price: "100$",
-    planPoint: ["No extra fees", "No hidden charges", "No extra charges"],
+    id: "standard",
+    name: "Standard",
+    descriptionPoints: [
+      "Great video quality in Full HD (1080p).",
+      "Watch ad-free on any phone, tablet, computer or TV.",
+      "Download on 2 devices.",
+    ],
+
+    stripePriceId: "price_1NsL7ZSFtLfNSPgon1dQNKAN",
+    price: 40,
   },
 ];

@@ -1,6 +1,8 @@
 import "src/app/globals.css";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
+import Navbar from "@/components/navbar/Navbar";
+import { cn } from "@/lib/utils";
 
 const inter = Poppins({
   subsets: ["latin"],
@@ -19,14 +21,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <nav>
-          <ul>
-            <li>Profile</li>
-            <li>Logout</li>
-          </ul>
-        </nav>
-        {children}
+      <body className={cn("dark w-screen", inter.className)}>
+        <Navbar />
+        <main className="h-[calc(100vh-57px)] ">{children}</main>
       </body>
     </html>
   );

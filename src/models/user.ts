@@ -37,12 +37,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-  isActiveSubscription: {
-    type: Boolean,
-    default: false,
-  },
-  subscriptionId: {
+  stripePriceId: {
     type: String,
+  },
+  stripeCurrentPeriodEnd: {
+    type: String,
+  },
+  stripeSubscriptionId: {
+    type: String,
+    unique: true,
   },
   varificationToken: String,
   varificationTokenExpire: Date,

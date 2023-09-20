@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { StatusCodes } from "http-status-codes";
 import { getServerSession } from "next-auth";
 import { stripe } from "@/configs/stripe";
-import { options } from "../auth/[...nextauth]/Options";
+import { options } from "../../auth/[...nextauth]/Options";
 import connectDB from "@/configs/dbConfig/dbConfig";
 import Users from "@/models/user";
 
@@ -26,30 +26,14 @@ export async function POST(request: NextRequest) {
 
     const foundUser = await Users.findOne({ email: session.user.email });
 
-    const sessions = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price: planId,
-          quantity: 1,
-        },
-      ],
-      customer: foundUser.stripeCustomerId,
-      mode: "subscription",
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
-      subscription_data: {
-        metadata: {
-          payingUserEmail: session.user.email,
-        },
-        trial_period_days: 14,
+    const subscriptionId = foundUser.subscriptionId;
+
+    const sessions = await stripe.subscriptions.update(subscriptionId, {
+      cancel_at_period_end: true,
+      metadata: {
+        payingUserEmail: session.user.email,
       },
     });
-
-    if (!sessions.url)
-      return NextResponse.json(
-        { error: "Could not create checkout session" },
-        { status: StatusCodes.INTERNAL_SERVER_ERROR }
-      );
 
     return NextResponse.json({ session: sessions }, { status: StatusCodes.OK });
   } catch (error: any) {

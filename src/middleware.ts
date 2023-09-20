@@ -13,6 +13,22 @@ export default withAuth(
       return NextResponse.rewrite(new URL("/denied", request.url));
     }
 
+    // // IF USER IS ALREADY SUBSCRIBED THEN DONT SHOW PRICING PAGE
+    // if (
+    //   request.nextUrl.pathname.startsWith("/subscription") &&
+    //   request.nextauth.token?.isActiveSubscription
+    // ) {
+    //   return NextResponse.rewrite(new URL("/profile", request.url));
+    // }
+
+    // // IF USER IS NOT SUBSCRIBED THEN DONT SHOW PROFILE PAGE
+    // if (
+    //   request.nextUrl.pathname.startsWith("/profile") &&
+    //   !request.nextauth.token?.isActiveSubscription
+    // ) {
+    //   return NextResponse.rewrite(new URL("/subscription", request.url));
+    // }
+
     if (
       request.nextUrl.pathname.startsWith("/moderation") &&
       request.nextauth.token?.role !== "admin" &&
@@ -29,5 +45,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin", "/moderation"],
+  matcher: ["/admin", "/moderation", "/subscription", "/profile"],
 };

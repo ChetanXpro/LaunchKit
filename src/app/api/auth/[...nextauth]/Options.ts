@@ -55,15 +55,13 @@ export const options: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }: any) {
-      // console.log("token", token);
-      // console.log("user", user);
+    async jwt({ token, user, profile }: any) {
+      console.log("profile", profile);
+      console.log("user", user);
 
       if (user) {
-        token.role = user.role;
-        token.stripeCustomerId = user.stripeCustomerId;
-        token.isActiveSubscription = user.isActiveSubscription;
-        token.subscriptionId = user.subscriptionId;
+        token.role = profile?.role || user.role;
+        token.name = user?.username || user.name;
       }
       return token;
     },
@@ -73,41 +71,35 @@ export const options: NextAuthOptions = {
         try {
           await connectDB();
           const email = profile!.email;
-          const email_verified = profile!.email_verified;
 
           const userFound = await Users.findOne({ email });
 
           if (!userFound) {
-            const customer = await createStripeCustomer(email);
-
             const usercreated = await Users.create({
               email: email,
-              provider: "google",
-              stripeCustomerId: customer.id,
               role: "user",
-              isActiveSubscription: false,
+              provider: "google",
               isVarified: false,
             });
             if (!usercreated) {
               return false;
             }
 
-            // console.log("usercreated", usercreated);
-            // console.log("stripeCustomer", customer);
-
             // await sendMail(email, usercreated._id, EMAIL_TYPE.VERIFY);
+
+            profile!.role = usercreated.role;
 
             return account;
           } else {
-            // account.user!.stripeCustomerId = userFound.stripeCustomerId;
-            // account.user!.isActiveSubscription = userFound.isActiveSubscription;
-            // account.user!.subscriptionId = userFound.subscriptionId;
+            account.role = userFound.role;
+            profile.role = userFound.role;
+
             return account;
           }
 
-          return userFound;
+          return account;
         } catch (error) {
-          // console.log(error);
+          console.log(error);
 
           return false;
         }
@@ -119,8 +111,8 @@ export const options: NextAuthOptions = {
     async session({ session, token }) {
       if (session?.user) {
         session.user.role = token.role as string;
+        session.user.name = token.name as string;
       }
-      // console.log("session", session);
 
       return session;
     },

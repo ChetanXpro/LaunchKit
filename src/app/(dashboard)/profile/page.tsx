@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const Profile = () => {
   // throw new Error("Client-side error");
@@ -17,6 +18,20 @@ const Profile = () => {
       router.push("/login");
     },
   });
+
+  const onCancelSubscription = async () => {
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseJson = await res.json();
+
+      console.log(responseJson);
+    } catch (error) {}
+  };
 
   // console.log("status: ", status);
 
@@ -36,15 +51,12 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen flex-col gap-4 flex items-center justify-center ">
+    <div className="h-full flex-col gap-4 flex items-center justify-center ">
       <h1>Profile</h1>
-      <button onClick={logout} className="btn">
-        Logout
-      </button>
-      Session: {JSON.stringify(session?.user)}
-      Status: {status}
-      <Link href={"/admin"}>Admin</Link>
-      <Link href={"/moderation"}>Moderator</Link>
+
+      {/* <Link href={"/admin"}>Admin</Link>
+      <Link href={"/moderation"}>Moderator</Link> */}
+      {/* <Button onClick={onCancelSubscription}>Cancel Subscription</Button> */}
     </div>
   );
 };

@@ -8,8 +8,7 @@ import Stripe from "stripe";
 // Ensure the key is kept out of any version control system you might be using.
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
-const endpointSecret =
-  "whsec_05f8f8cf54db4b539a4d4474a8c7c20847555108d33bafd3122c5af80af35386";
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 connectDB();
 
@@ -56,14 +55,30 @@ export async function POST(request: NextRequest) {
         const updated = await Users.findOneAndUpdate(
           { email: customerEmail },
           {
-            subscriptionId,
-            isActiveSubscription: true,
+            stripeSubscriptionId: subscriptionId,
+            stripeCustomerId: subscription.customer as string,
+            stripePriceId: subscription.items.data[0].price.id,
+            stripeCurrentPeriodEnd: new Date(
+              subscription.current_period_end * 1000
+            ),
           }
         );
 
         console.log("updated", updated);
 
         break;
+      case "invoice.payment_succeeded":
+        await Users.findOneAndUpdate(
+          { email: customerEmail },
+          {
+            stripeSubscriptionId: subscriptionId,
+
+            stripePriceId: subscription.items.data[0].price.id,
+            stripeCurrentPeriodEnd: new Date(
+              subscription.current_period_end * 1000
+            ),
+          }
+        );
 
       case "customer.subscription.deleted":
         await Users.findOneAndUpdate(

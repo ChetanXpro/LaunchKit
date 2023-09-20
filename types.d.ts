@@ -58,3 +58,11 @@ type Metadata = {
   Sku: string;
   Service_SKU: string;
 };
+
+type SubscriptionPlan = {
+  id: string;
+  name: string;
+  descriptionPoints: string[];
+  stripePriceId: string;
+  price: number;
+};

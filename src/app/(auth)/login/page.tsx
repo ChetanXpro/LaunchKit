@@ -21,7 +21,7 @@ const page = () => {
   const { data } = useSession();
 
   if (data?.user) {
-    router.replace("/profile");
+    router.push("/profile");
   }
 
   const {
