@@ -18,7 +18,7 @@ This Next.js template to Ship fast and is designed to eliminate the tedious and 
 
 - **Deployment-Ready:** Deploy your project swiftly to popular hosting platforms like Vercel, Netlify, AWS, or Heroku, and start reaching your audience sooner.
 
-## Components Available in shipfast
+## Components Available in shipFast (Will add more with time)
 
 * Pricing Components
 
