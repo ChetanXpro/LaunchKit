@@ -10,7 +10,7 @@ This Next.js template to Ship fast and is designed to eliminate the tedious and 
 - **Database Connections:** Easily connect to database
 - **Logins:** Both email password and goggle auth already setup
 
-- **Email Integration:** Seamlessly integrate Mailgun for email functionality, including transactional emails and notifications.
+- **Email Integration:** Seamlessly integrate Mailer for email functionality, including transactional emails and notifications.
 
 - **Payment Processing:** Implement Stripe for secure and efficient payment processing without the hassle of complex configurations.
 
@@ -27,7 +27,7 @@ This Next.js template to Ship fast and is designed to eliminate the tedious and 
 
 * [x] Setup stripe
 * [x] Add google signin
-* [ ] Setup mailgun for emails
+* [x] Setup mailer for emails
 * [ ] setup seo and sitemap functions
 
 
