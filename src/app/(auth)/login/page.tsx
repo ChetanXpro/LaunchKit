@@ -123,7 +123,7 @@ const page = () => {
         <div className="w-full items-center justify-center ">
           <Button onClick={onGoogleLogin} className="w-full flex gap-3">
             <Image width={25} height={25} src={googleIcon} alt="googleicon" />
-            Login with google
+            Continue with google
           </Button>
         </div>
 

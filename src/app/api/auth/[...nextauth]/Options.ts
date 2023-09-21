@@ -68,24 +68,32 @@ export const options: NextAuthOptions = {
 
     async signIn({ account, profile }: any) {
       if (account!.provider === "google") {
+        console.log("profile", profile);
+        console.log("account", account);
+
         try {
           await connectDB();
           const email = profile!.email;
+          const emailVerified = profile!.email_verified;
+          const name = profile!.name;
 
           const userFound = await Users.findOne({ email });
 
           if (!userFound) {
             const usercreated = await Users.create({
               email: email,
+              name: name,
               role: "user",
               provider: "google",
-              isVarified: false,
+              isVarified: emailVerified,
             });
             if (!usercreated) {
               return false;
             }
 
-            // await sendMail(email, usercreated._id, EMAIL_TYPE.VERIFY);
+            if (!emailVerified) {
+              await sendMail(email, usercreated._id, EMAIL_TYPE.VERIFY);
+            }
 
             profile!.role = usercreated.role;
 

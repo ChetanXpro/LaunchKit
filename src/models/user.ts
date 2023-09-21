@@ -1,17 +1,16 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
-    min: 3,
-    max: 25,
-    trim: true,
+    required: [true, "Please enter your name"],
   },
 
   provider: {
     type: String,
     default: "credentials",
     enum: ["credentials", "google"],
+    required: true,
   },
   email: {
     type: String,

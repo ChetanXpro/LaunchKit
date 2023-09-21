@@ -5,16 +5,14 @@ import bcrypt from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
 import { sendMail } from "@/helpers/mailer";
 import { EMAIL_TYPE } from "@/constants/email";
-import { createStripeCustomer } from "@/configs/stripe";
-
-connectDB();
+// import { createStripeCustomer } from "@/configs/stripe";
 
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { username, email, password } = reqBody;
+    const { name, email, password } = reqBody;
 
-    if (!username || !email || !password) {
+    if (!name || !email || !password) {
       return NextResponse.json(
         { error: "Please fill all the fields" },
         {
@@ -23,7 +21,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    await connectDB();
+
     const user = await Users.findOne({ email });
+
+    console.log("user found", user);
 
     if (user) {
       return NextResponse.json(
@@ -38,23 +40,22 @@ export async function POST(request: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const customer = await createStripeCustomer(email);
-
     const createdUser = await Users.create({
-      username,
+      name,
       email,
       provider: "credentials",
-      stripeCustomerId: customer.id,
       password: hashedPassword,
     });
 
-    await sendMail(email, createdUser._id, EMAIL_TYPE.VERIFY);
+    console.log("createdUser", createdUser);
+
+    // await sendMail(email, createdUser._id, EMAIL_TYPE.VERIFY);
     return NextResponse.json(
       {
         message: "Account created successfully",
         success: true,
         user: {
-          username: createdUser.username,
+          name: createdUser.name,
           email: createdUser.email,
           role: createdUser.role,
         },

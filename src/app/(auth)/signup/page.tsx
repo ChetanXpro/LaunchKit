@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import React, { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input, InputProps } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -25,13 +27,20 @@ const page = () => {
     try {
       console.log("onSignup");
 
-      setisLoading(true);
-
       const data = {
-        username: watch("username"),
+        name: watch("fullName"),
         email: watch("Email"),
         password: watch("Password"),
       };
+
+      console.log(data);
+
+      if (!watch("Password") || !watch("Email") || !watch("fullName")) {
+        toast.error("Please fill all the fields");
+        return;
+      }
+
+      setisLoading(true);
 
       const res = await axios.post("/api/user/signup", data);
 
@@ -63,35 +72,43 @@ const page = () => {
     <div className="flex min-h-screen  flex-col gap-4  items-center justify-center  ">
       <Toaster position="top-center" reverseOrder={true} />
       <div className="flex form-control w-full max-w-xs flex-col gap-2">
-        <label className="label">Username</label>
-        <input
-          {...register("username", { required: true })}
-          placeholder="username"
+        <label className="label">Full name</label>
+        <Input
+          {...register("fullName", { required: true })}
+          placeholder="Full name"
           className="input input-bordered w-full max-w-xs"
         />
-        {errors.username && <p className="error">UserName is required.</p>}
+        {errors.fullName && <p className="error">Full name is required.</p>}
         <label className="label">Email</label>
-        <input
+        <Input
           {...register("Email", { required: true })}
           className="input input-bordered w-full max-w-xs"
           placeholder="Email"
         />
         {errors.Email && <p className="error">Email is required.</p>}
         <label className="label">Password</label>
-        <input
+        <Input
           {...register("Password", { required: true })}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              handleSubmit(onSignup)();
+            }
+          }}
           placeholder="Password"
           className="input input-bordered w-full max-w-xs"
         />
         {errors.Password && <p className="error">Password is required.</p>}
 
-        <button
+        <Button
           className={` ${buttonEnabled ? "btn" : "btn btn-disabled"} mt-4`}
           onClick={onSignup}
+          type="submit"
         >
-          {isLoading && <span className="loading loading-spinner"></span>}
+          {/* {isLoading && (
+            <span className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></span>
+          )} */}
           Signup
-        </button>
+        </Button>
 
         <div className="mt-4 items-center justify-between flex w-full">
           <p>

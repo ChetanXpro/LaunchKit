@@ -18,6 +18,7 @@ export default async function Navbar() {
   const session = await getAuthSession();
 
   if (!session) return redirect("/login");
+  console.log("navbar", session);
 
   return (
     <nav className="flex justify-between items-center py-2 px-4 sm:px-16 border-b">
@@ -26,10 +27,7 @@ export default async function Navbar() {
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
-            <AvatarImage
-              src={session.user?.image || ""}
-              alt={session.user.name || ""}
-            />
+            <AvatarImage src={session.user?.image} alt={session.user.name} />
             <AvatarFallback>
               {session.user.name
                 ?.split(" ")
