@@ -89,18 +89,28 @@ export async function POST(request: NextRequest) {
         );
       default:
         console.warn(`🤷‍♀️ Unhandled event type: ${event.type}`);
+
         break;
     }
 
-    return NextResponse.json({ received: true });
-  } catch (error) {
     return NextResponse.json(
+      { received: true },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    let response = NextResponse.json(
       {
         error: {
           message: `Method Not Allowed`,
         },
       },
       { status: 405 }
-    ).headers.set("Allow", "POST");
+    );
+
+    response.headers.set("Allow", "POST");
+
+    return response;
   }
 }

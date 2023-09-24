@@ -2,7 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const verifyEmail = () => {
+const VerifyEmail = () => {
   const [token, setToken] = useState("");
   const [verifyEmail, setVerifyEmail] = useState(false);
   const [error, setError] = useState("");
@@ -45,4 +45,4 @@ const verifyEmail = () => {
   );
 };
 
-export default verifyEmail;
+export default VerifyEmail;

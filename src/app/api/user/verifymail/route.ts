@@ -10,8 +10,6 @@ export async function POST(request: NextRequest) {
     const reqbody = await request.json();
     const token = reqbody.token;
 
-    console.log(token);
-
     const user = await Users.findOne({
       varificationToken: token,
       varificationTokenExpire: {
@@ -20,13 +18,15 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-      return {
-        status: StatusCodes.BAD_REQUEST,
-        body: {
+      return NextResponse.json(
+        {
           success: false,
           message: "Expired token",
         },
-      };
+        {
+          status: StatusCodes.BAD_REQUEST,
+        }
+      );
     }
 
     user.isVarified = true;
@@ -35,19 +35,27 @@ export async function POST(request: NextRequest) {
 
     await user.save();
 
-    return NextResponse.json({
-      status: StatusCodes.OK,
-      message: "Email verified",
-      success: true,
-    });
-  } catch (error) {
-    return NextResponse.json({
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      body: {
-        success: false,
-        message: "Server error",
+    return NextResponse.json(
+      {
+        message: "Email verified",
+        success: true,
       },
-    });
+      {
+        status: StatusCodes.OK,
+      }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        body: {
+          success: false,
+          message: "Server error",
+        },
+      },
+      {
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
+      }
+    );
   }
 
   // Expire

@@ -13,7 +13,7 @@ import { Input, InputProps } from "@/components/ui/input";
 import Image from "next/image";
 import googleIcon from "../../../../public/icons/google.png";
 
-const page = () => {
+const Page = () => {
   const [isLoading, setisLoading] = React.useState(false);
   const [isGoogleLoading, setisGoogleLoading] = React.useState(false);
   const router = useRouter();
@@ -94,6 +94,7 @@ const page = () => {
     } else {
       setButtonEnabled(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch("username"), watch("Email"), watch("Password")]);
 
   return (
@@ -140,4 +141,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

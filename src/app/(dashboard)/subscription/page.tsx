@@ -9,7 +9,7 @@ import { getAuthSession } from "@/lib/auth";
 import { storeSubscriptionPlans } from "@/configs/stripe";
 import PlanCard from "@/components/Plans/PlanCard";
 import { Card } from "@/components/ui/card";
-const page = async () => {
+const Page = async () => {
   const subscriptionPlan = await useSubscriptions();
   const session = await getAuthSession();
   return (
@@ -45,4 +45,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Page;

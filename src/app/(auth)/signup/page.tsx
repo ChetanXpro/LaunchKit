@@ -9,7 +9,7 @@ import { Input, InputProps } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
 
-const page = () => {
+const Page = () => {
   const [isLoading, setisLoading] = React.useState(false);
 
   const router = useRouter();
@@ -123,4 +123,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
