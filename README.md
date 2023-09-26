@@ -1,5 +1,5 @@
-
 # LaunchKit
+
 This Next.js template to Ship fast and is designed to eliminate the tedious and time-consuming setup tasks that most developers find boring. It provides all the essential configurations and integrations you need to kickstart your next Product. With this template, you can bypass the initial hurdles and rapidly develop your product, getting it ready for launch in no time.
 
 ## Features
@@ -20,14 +20,13 @@ This Next.js template to Ship fast and is designed to eliminate the tedious and 
 
 ## Components Available in shipFast (Will add more with time)
 
-* Pricing Components
-
+- Pricing Component
+- Hero Section
+- Testimonials Component
 
 # TODO
 
-* [x] Setup stripe
-* [x] Add google signin
-* [x] Setup mailer for emails
-* [ ] setup seo and sitemap functions
-
-
+- [x] Setup stripe
+- [x] Add google signin
+- [x] Setup mailer for emails
+- [ ] setup seo and sitemap functions
